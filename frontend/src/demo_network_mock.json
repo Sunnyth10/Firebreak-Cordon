@@ -1,0 +1,63 @@
+{
+  "meta": {
+    "name": "Enterprise Security Operations Network",
+    "critical_threshold": 8
+  },
+  "nodes": [
+    { "id": "DMZ-FIREWALL", "name": "DMZ Perimeter Firewall", "type": "network", "criticality": 7, "status": "healthy" },
+    { "id": "VPN-GATEWAY", "name": "Corporate VPN Gateway", "type": "network", "criticality": 6, "status": "healthy" },
+    { "id": "CORE-ROUTER", "name": "Core Distribution Router", "type": "network", "criticality": 7, "status": "healthy" },
+    { "id": "INTERNAL-DNS", "name": "Internal Active Directory DNS", "type": "network", "criticality": 5, "status": "healthy" },
+    { "id": "WEB-01", "name": "Customer Portal Web 01", "type": "web", "criticality": 6, "status": "healthy" },
+    { "id": "WEB-02", "name": "Customer Portal Web 02", "type": "web", "criticality": 6, "status": "healthy" },
+    { "id": "APP-01", "name": "Order Processing App 01", "type": "app", "criticality": 7, "status": "healthy" },
+    { "id": "APP-02", "name": "Payment Gateway App 02", "type": "app", "criticality": 8, "status": "healthy" },
+    { "id": "AUTH-AD", "name": "Active Directory Domain Controller", "type": "auth", "criticality": 9, "status": "healthy" },
+    { "id": "BASTION-HOST", "name": "Privileged Access Bastion", "type": "auth", "criticality": 9, "status": "healthy" },
+    { "id": "DB-PRIMARY", "name": "Transactional SQL Primary", "type": "database", "criticality": 10, "status": "healthy" },
+    { "id": "DB-REPLICA", "name": "Read-Only Replica SQL", "type": "database", "criticality": 9, "status": "healthy" },
+    { "id": "BACKUP-VAULT", "name": "Immutable Backup Vault", "type": "backup", "criticality": 8, "status": "healthy" },
+    { "id": "FILE-SERVER", "name": "Corporate File Repository", "type": "app", "criticality": 5, "status": "healthy" },
+    { "id": "MONITOR-SIEM", "name": "Security Event SIEM Collector", "type": "app", "criticality": 6, "status": "healthy" },
+    { "id": "LAPTOP-ENG", "name": "DevOps Engineer Laptop", "type": "endpoint", "criticality": 2, "status": "compromised" },
+    { "id": "LAPTOP-SALES", "name": "Sales Rep Mobile Laptop", "type": "endpoint", "criticality": 2, "status": "healthy" },
+    { "id": "LAPTOP-FIN", "name": "Finance Analyst Workstation", "type": "endpoint", "criticality": 3, "status": "healthy" },
+    { "id": "PRINTER-HR", "name": "HR Confidential Printer", "type": "peripheral", "criticality": 1, "status": "compromised" },
+    { "id": "PRINTER-DEV", "name": "Engineering Lab 3D Printer", "type": "peripheral", "criticality": 1, "status": "healthy" }
+  ],
+  "edges": [
+    { "id": "E-ENG-VPN", "source": "LAPTOP-ENG", "target": "VPN-GATEWAY", "kind": "network", "probability": 0.9 },
+    { "id": "E-VPN-AUTH", "source": "VPN-GATEWAY", "target": "AUTH-AD", "kind": "network", "probability": 0.8 },
+    { "id": "E-VPN-DNS", "source": "VPN-GATEWAY", "target": "INTERNAL-DNS", "kind": "network", "probability": 0.8 },
+    { "id": "E-AUTH-BASTION", "source": "AUTH-AD", "target": "BASTION-HOST", "kind": "network", "probability": 0.7 },
+    { "id": "E-AUTH-APP01", "source": "AUTH-AD", "target": "APP-01", "kind": "network", "probability": 0.6 },
+    { "id": "E-BASTION-DB", "source": "BASTION-HOST", "target": "DB-PRIMARY", "kind": "network", "probability": 0.85 },
+    { "id": "E-APP01-DB", "source": "APP-01", "target": "DB-PRIMARY", "kind": "network", "probability": 0.7 },
+    { "id": "E-DB-REPLICA", "source": "DB-PRIMARY", "target": "DB-REPLICA", "kind": "network", "probability": 0.9 },
+    { "id": "E-DB-BACKUP", "source": "DB-PRIMARY", "target": "BACKUP-VAULT", "kind": "network", "probability": 0.5 },
+    { "id": "E-FW-WEB01", "source": "DMZ-FIREWALL", "target": "WEB-01", "kind": "network", "probability": 0.9 },
+    { "id": "E-FW-WEB02", "source": "DMZ-FIREWALL", "target": "WEB-02", "kind": "network", "probability": 0.9 },
+    { "id": "E-WEB01-APP01", "source": "WEB-01", "target": "APP-01", "kind": "network", "probability": 0.8 },
+    { "id": "E-WEB02-APP02", "source": "WEB-02", "target": "APP-02", "kind": "network", "probability": 0.8 },
+    { "id": "E-APP02-DB", "source": "APP-02", "target": "DB-PRIMARY", "kind": "network", "probability": 0.75 },
+    { "id": "E-SALES-VPN", "source": "LAPTOP-SALES", "target": "VPN-GATEWAY", "kind": "network", "probability": 0.8 },
+    { "id": "E-FIN-VPN", "source": "LAPTOP-FIN", "target": "VPN-GATEWAY", "kind": "network", "probability": 0.85 },
+    { "id": "E-DNS-SIEM", "source": "INTERNAL-DNS", "target": "MONITOR-SIEM", "kind": "network", "probability": 0.6 },
+    { "id": "E-CORE-FILE", "source": "CORE-ROUTER", "target": "FILE-SERVER", "kind": "network", "probability": 0.7 },
+    { "id": "DEP-WEB01-APP01", "source": "WEB-01", "target": "APP-01", "kind": "dependency" },
+    { "id": "DEP-WEB02-APP02", "source": "WEB-02", "target": "APP-02", "kind": "dependency" },
+    { "id": "DEP-APP01-AUTH", "source": "APP-01", "target": "AUTH-AD", "kind": "dependency" },
+    { "id": "DEP-APP02-AUTH", "source": "APP-02", "target": "AUTH-AD", "kind": "dependency" },
+    { "id": "DEP-APP01-DB", "source": "APP-01", "target": "DB-PRIMARY", "kind": "dependency" },
+    { "id": "DEP-APP02-DB", "source": "APP-02", "target": "DB-PRIMARY", "kind": "dependency" },
+    { "id": "DEP-REPLICA-DB", "source": "DB-REPLICA", "target": "DB-PRIMARY", "kind": "dependency" },
+    { "id": "DEP-BACKUP-DB", "source": "BACKUP-VAULT", "target": "DB-PRIMARY", "kind": "dependency" },
+    { "id": "DEP-BASTION-AUTH", "source": "BASTION-HOST", "target": "AUTH-AD", "kind": "dependency" },
+    { "id": "DEP-APP01-DNS", "source": "APP-01", "target": "INTERNAL-DNS", "kind": "dependency" },
+    { "id": "DEP-APP02-DNS", "source": "APP-02", "target": "INTERNAL-DNS", "kind": "dependency" }
+  ],
+  "incidents": [
+    { "id": "INC-DEMO-01", "node_id": "LAPTOP-ENG", "severity": 3, "confidence": 0.85, "timestamp": "2026-10-03T10:00:00Z" },
+    { "id": "INC-DEMO-02", "node_id": "PRINTER-HR", "severity": 10, "confidence": 0.95, "timestamp": "2026-10-03T10:05:00Z" }
+  ]
+}
