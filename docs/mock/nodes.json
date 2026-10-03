@@ -1,0 +1,9 @@
+[
+  { "id": "LT", "name": "Laptop", "type": "endpoint", "criticality": 2, "status": "compromised" },
+  { "id": "P", "name": "Printer", "type": "peripheral", "criticality": 1, "status": "compromised" },
+  { "id": "A", "name": "App Server", "type": "app", "criticality": 7, "status": "healthy" },
+  { "id": "B", "name": "Backup Server", "type": "backup", "criticality": 8, "status": "healthy" },
+  { "id": "L", "name": "Login Server", "type": "auth", "criticality": 9, "status": "healthy" },
+  { "id": "D", "name": "Database", "type": "database", "criticality": 10, "status": "healthy" },
+  { "id": "W", "name": "Web Server", "type": "web", "criticality": 6, "status": "healthy" }
+]

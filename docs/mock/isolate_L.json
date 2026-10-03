@@ -1,0 +1,17 @@
+{
+  "isolated_node": "L",
+  "disruption_cost": 9,
+  "incidents_affected": [
+    {
+      "incident_id": "INC-1",
+      "node_id": "LT",
+      "risk_before": 49.92,
+      "risk_after": 17.28,
+      "risk_reduction_pct": 65.38,
+      "remaining_blast_radius": {
+        "A": { "hops": 1, "reach_probability": 0.4 },
+        "D": { "hops": 2, "reach_probability": 0.24 }
+      }
+    }
+  ]
+}

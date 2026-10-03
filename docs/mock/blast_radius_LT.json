@@ -1,0 +1,10 @@
+{
+  "source_id": "LT",
+  "blast_radius": {
+    "L": { "hops": 1, "reach_probability": 0.8 },
+    "A": { "hops": 1, "reach_probability": 0.4 },
+    "D": { "hops": 2, "reach_probability": 0.56 },
+    "B": { "hops": 2, "reach_probability": 0.4 }
+  },
+  "total_impact": 20.8
+}

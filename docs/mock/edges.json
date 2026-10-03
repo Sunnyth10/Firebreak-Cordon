@@ -1,0 +1,10 @@
+[
+  { "id": "E-LT-L", "source": "LT", "target": "L", "kind": "network", "probability": 0.8 },
+  { "id": "E-LT-A", "source": "LT", "target": "A", "kind": "network", "probability": 0.4 },
+  { "id": "E-L-D", "source": "L", "target": "D", "kind": "network", "probability": 0.7 },
+  { "id": "E-A-D", "source": "A", "target": "D", "kind": "network", "probability": 0.6 },
+  { "id": "E-L-B", "source": "L", "target": "B", "kind": "network", "probability": 0.5 },
+  { "id": "DEP-A-D", "source": "A", "target": "D", "kind": "dependency" },
+  { "id": "DEP-A-L", "source": "A", "target": "L", "kind": "dependency" },
+  { "id": "DEP-W-A", "source": "W", "target": "A", "kind": "dependency" }
+]

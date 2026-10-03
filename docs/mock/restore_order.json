@@ -1,0 +1,6 @@
+{
+  "ok": true,
+  "order": ["D", "L", "A", "W", "B", "LT", "P"],
+  "cycle": null,
+  "explanation": "Valid topological restore order: D and L restored before A; A restored before W."
+}

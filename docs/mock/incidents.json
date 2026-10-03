@@ -1,0 +1,4 @@
+[
+  { "id": "INC-1", "node_id": "LT", "severity": 3, "confidence": 0.8, "timestamp": "2026-10-03T10:00:00Z" },
+  { "id": "INC-2", "node_id": "P", "severity": 9, "confidence": 0.9, "timestamp": "2026-10-03T10:05:00Z" }
+]

@@ -1,0 +1,20 @@
+{
+  "seed": 42,
+  "strategies": {
+    "fcfs": {
+      "total_damage": 312.4,
+      "handled_order": ["INC-1", "INC-2"],
+      "_mock": true
+    },
+    "severity_only": {
+      "total_damage": 450.2,
+      "handled_order": ["INC-2", "INC-1"],
+      "_mock": true
+    },
+    "graph_aware": {
+      "total_damage": 182.1,
+      "handled_order": ["INC-1", "INC-2"],
+      "_mock": true
+    }
+  }
+}

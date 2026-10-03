@@ -1,0 +1,32 @@
+{
+  "queue": [
+    {
+      "incident_id": "INC-1",
+      "node_id": "LT",
+      "score": 49.92,
+      "breakdown": {
+        "severity": 3,
+        "confidence": 0.8,
+        "own_criticality": 2,
+        "reachable_weighted_criticality": 18.8,
+        "impact": 20.8,
+        "score": 49.92
+      },
+      "timestamp": "2026-10-03T10:00:00Z"
+    },
+    {
+      "incident_id": "INC-2",
+      "node_id": "P",
+      "score": 8.10,
+      "breakdown": {
+        "severity": 9,
+        "confidence": 0.9,
+        "own_criticality": 1,
+        "reachable_weighted_criticality": 0.0,
+        "impact": 1.0,
+        "score": 8.10
+      },
+      "timestamp": "2026-10-03T10:05:00Z"
+    }
+  ]
+}

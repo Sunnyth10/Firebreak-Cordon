@@ -1,0 +1,14 @@
+{
+  "source": "LT",
+  "target": "D",
+  "path": ["LT", "L", "D"],
+  "probability": 0.56,
+  "total_weight": 0.57981849,
+  "alternatives": [
+    {
+      "path": ["LT", "A", "D"],
+      "probability": 0.24,
+      "total_weight": 1.42711636
+    }
+  ]
+}
