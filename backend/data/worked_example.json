@@ -1,0 +1,128 @@
+{
+  "meta": {
+    "name": "Worked Example Network",
+    "critical_threshold": 8
+  },
+  "nodes": [
+    {
+      "id": "LT",
+      "name": "Laptop",
+      "type": "endpoint",
+      "criticality": 2,
+      "status": "compromised"
+    },
+    {
+      "id": "P",
+      "name": "Printer",
+      "type": "peripheral",
+      "criticality": 1,
+      "status": "compromised"
+    },
+    {
+      "id": "A",
+      "name": "App Server",
+      "type": "app",
+      "criticality": 7,
+      "status": "healthy"
+    },
+    {
+      "id": "B",
+      "name": "Backup Server",
+      "type": "backup",
+      "criticality": 8,
+      "status": "healthy"
+    },
+    {
+      "id": "L",
+      "name": "Login Server",
+      "type": "auth",
+      "criticality": 9,
+      "status": "healthy"
+    },
+    {
+      "id": "D",
+      "name": "Database",
+      "type": "database",
+      "criticality": 10,
+      "status": "healthy"
+    },
+    {
+      "id": "W",
+      "name": "Web Server",
+      "type": "web",
+      "criticality": 6,
+      "status": "healthy"
+    }
+  ],
+  "edges": [
+    {
+      "id": "E-LT-L",
+      "source": "LT",
+      "target": "L",
+      "kind": "network",
+      "probability": 0.8
+    },
+    {
+      "id": "E-LT-A",
+      "source": "LT",
+      "target": "A",
+      "kind": "network",
+      "probability": 0.4
+    },
+    {
+      "id": "E-L-D",
+      "source": "L",
+      "target": "D",
+      "kind": "network",
+      "probability": 0.7
+    },
+    {
+      "id": "E-A-D",
+      "source": "A",
+      "target": "D",
+      "kind": "network",
+      "probability": 0.6
+    },
+    {
+      "id": "E-L-B",
+      "source": "L",
+      "target": "B",
+      "kind": "network",
+      "probability": 0.5
+    },
+    {
+      "id": "DEP-A-D",
+      "source": "A",
+      "target": "D",
+      "kind": "dependency"
+    },
+    {
+      "id": "DEP-A-L",
+      "source": "A",
+      "target": "L",
+      "kind": "dependency"
+    },
+    {
+      "id": "DEP-W-A",
+      "source": "W",
+      "target": "A",
+      "kind": "dependency"
+    }
+  ],
+  "incidents": [
+    {
+      "id": "INC-1",
+      "node_id": "LT",
+      "severity": 3,
+      "confidence": 0.8,
+      "timestamp": "2026-10-03T10:00:00Z"
+    },
+    {
+      "id": "INC-2",
+      "node_id": "P",
+      "severity": 9,
+      "confidence": 0.9,
+      "timestamp": "2026-10-03T10:05:00Z"
+    }
+  ]
+}
