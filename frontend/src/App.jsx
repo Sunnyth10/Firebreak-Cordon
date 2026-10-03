@@ -3,7 +3,7 @@ import cytoscape from 'cytoscape';
 import workedExampleData from './worked_example_mock.json';
 import demoNetworkData from './demo_network_mock.json';
 
-const API_BASE = 'http://127.0.0.1:5000';
+const API_BASE = import.meta.env.VITE_API_BASE || 'http://127.0.0.1:5000';
 
 export default function App() {
   const [selectedScenario, setSelectedScenario] = useState('worked_example');

@@ -8,6 +8,7 @@ serving valid payloads, and correctly executing all graph algorithms.
 from __future__ import annotations
 
 import json
+from pathlib import Path
 import sys
 import urllib.error
 import urllib.parse
@@ -44,6 +45,16 @@ def run_smoke_tests() -> bool:
     print("FIREBREAK-CORDON LIVE END-TO-END SMOKE TESTS")
     print("=" * 60)
     all_passed = True
+
+    # Ensure backend network state is reset to worked_example
+    fixture_path = Path(__file__).resolve().parent.parent / "data" / "worked_example.json"
+    if fixture_path.is_file():
+        try:
+            with open(fixture_path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            http_request("http://127.0.0.1:5000/network", method="POST", data=data)
+        except Exception:
+            pass
 
     # 1. Frontend Server Check
     print("\n[1/8] Checking Vite React Frontend (http://127.0.0.1:5173)...")
