@@ -1,35 +1,35 @@
-# Phase 4 Handoff: Cyber Incident Response Planner
+# Phase 5 Handoff: Cyber Incident Response Planner
 
 ## 1. Status
-- **Phase Completed**: Phase 4 (DFS Cycle Detection & Topological Restore Order)
+- **Phase Completed**: Phase 5 (Simulation & Strategy Comparison)
 - **Date**: October 3, 2026
 - **What is done**:
-  - `restore_order(network)` implemented in `backend/planner/core/restore.py`:
-    - Traverses `dependency` edges where $u \to v$ means $u$ requires $v$ to run.
-    - True iterative DFS using a three-color state machine (`WHITE=0`, `GRAY=1`, `BLACK=2`) completely eliminating recursion depth limits.
-    - Accurately detects circular dependencies via back-edges to `GRAY` nodes, extracting the exact circular path `[v, ..., u, v]`.
-    - Produces valid topological recovery sequences ensuring all required dependencies are operational before dependent services start.
-  - Comprehensive unit test suite in `backend/tests/test_restore.py`:
-    - Verified `worked_example.json` topological sequence: $D$ and $L$ restored before $A$, and $A$ restored before $W$.
-    - Verified circular dependency detection and error reporting.
-    - Verified 20-node `demo_network.json` acyclic restoration satisfying all 11 dependency constraints.
-    - Verified deep dependency chain (2,500 nodes) executing cleanly without `RecursionError`.
-    - Cross-verified valid topological ordering against `networkx.is_directed_acyclic_graph` and edge topological precedence.
-  - All 42 unit tests passing.
+  - `run_strategies(network, incidents, seed)` implemented in `backend/planner/core/simulate.py`:
+    - Compares 3 distinct operational strategies: `"fcfs"` (First-Come-First-Served), `"severity_only"`, and `"graph_aware"`.
+    - Fully deterministic execution via explicit random `seed`.
+    - Simulates discrete time steps where uncontained incidents inflict lateral damage proportional to their impact and severity.
+    - Demonstrates that `graph_aware` strategy cuts overall system damage by isolating high-impact lateral pivots (such as `LT` and `LAPTOP-ENG`) early.
+  - Comprehensive unit test suite in `backend/tests/test_simulate.py`:
+    - Verified handling orders for `worked_example.json` (`fcfs`: `INC-1, INC-2`; `severity_only`: `INC-2, INC-1`; `graph_aware`: `INC-1, INC-2`).
+    - Verified that `graph_aware` accumulates significantly less damage than `severity_only`.
+    - Verified 100% determinism with identical seeds.
+    - Verified edge cases (zero incidents).
+    - Verified enterprise `demo_network.json` behavior.
+  - All 47 unit tests passing.
 - **What is NOT done** (scheduled for future phases):
-  - Strategy simulation comparison (Phase 5).
-  - Flask algorithm endpoints (Phase 6).
-  - Interactive UI panels for restore ordering and simulation comparison (Phase 7).
+  - Flask API implementation of all endpoints (Phase 6).
+  - Interactive React frontend panels and API integration (Phase 7).
+  - Performance benchmarks and final polish (Phase 8).
 
 ---
 
 ## 2. What Was Built
-- **Iterative Restoration Engine (`restore.py`)**:
-  - Robust three-color state machine.
-  - Cycle detection with exact back-trace path extraction.
-  - Dependency precedence guarantee: $u \to v \implies \text{index}(v) < \text{index}(u)$.
-- **Unit Test Suite (`test_restore.py`)**:
-  - 5 tests covering correctness, cycle detection, large scale chains (2,500 nodes), and NetworkX comparison.
+- **Discrete Event Simulator (`simulate.py`)**:
+  - Multi-round simulation tracking ongoing lateral exposure damage.
+  - Strategy comparative analysis (`fcfs`, `severity_only`, `graph_aware`).
+  - Strict determinism via seed parameter.
+- **Unit Test Suite (`test_simulate.py`)**:
+  - 5 tests covering orders, damage reduction, reproducibility, and fixture evaluations.
 
 ---
 
@@ -55,7 +55,7 @@
 - `backend/planner/core/scoring.py`: Priority score calculation and versioned `IncidentQueue`.
 - `backend/planner/core/paths.py`: Dijkstra attack paths and containment recommendation engine.
 - `backend/planner/core/restore.py`: Iterative DFS cycle detection and topological restore order engine.
-- `backend/planner/core/simulate.py`: Contract stub for strategy simulation.
+- `backend/planner/core/simulate.py`: Strategy simulation engine comparing FCFS, Severity-Only, and Graph-Aware.
 - `backend/planner/api/app.py`: Flask application factory with `GET /health`.
 - `backend/planner/db/schema.sql` & `init_db.py`: SQLite persistence layer.
 - `backend/data/worked_example.json`: 7-node canonical fixture.
@@ -67,6 +67,7 @@
 - `backend/tests/test_scoring.py`: Priority scoring and queue unit tests.
 - `backend/tests/test_paths.py`: Dijkstra attack path and containment unit tests.
 - `backend/tests/test_restore.py`: Restore order and cycle detection unit tests.
+- `backend/tests/test_simulate.py`: Simulation and strategy comparison unit tests.
 - `frontend/`: Vite + React + Cytoscape UI.
 
 ---
@@ -80,71 +81,55 @@ py -m pytest -q backend/tests -o pythonpath=backend
 ---
 
 ## 5. Contracts
-- `restore.restore_order(network: Network) -> RestoreResult`
-  - Returns `RestoreResult(ok=True, order=[...], cycle=None, explanation="...")` when acyclic.
-  - Returns `RestoreResult(ok=False, order=None, cycle=[...], explanation="...")` when cyclic.
+- `simulate.run_strategies(network: Network, incidents: list[Incident], seed: int = 42) -> dict[str, dict[str, Any]]`
+  - Returns dictionary with `"fcfs"`, `"severity_only"`, and `"graph_aware"` results containing `"total_damage"` and `"handled_order"`.
 
 ---
 
 ## 6. Verification
 ```
 > py -m pytest -q backend/tests -o pythonpath=backend
-..........................................                               [100%]
-42 passed in 0.29s
+...............................................                          [100%]
+47 passed in 0.34s
 ```
-All 42 unit tests passed, confirming:
-- `worked_example`: topological sequence guarantees $D$ and $L$ precede $A$, and $A$ precedes $W$.
-- Cycle detection successfully isolates loops ($S_1 \to S_2 \to S_3 \to S_1$).
-- `demo_network`: all 11 dependency pairs satisfy order precedence across 20 nodes.
-- 2,500-node linear chain traverses and orders without hitting recursion limits.
-- Independent verification against `networkx` DAG topological constraints passed.
+All 47 unit tests passed across all core algorithm engines.
 
 ---
 
 ## 7. Decisions and Assumptions
-- The dependency relation $u \to v$ denotes that system $u$ requires system $v$ to function. In recovery order, $v$ must be restored before $u$.
-- Graph cycles strictly prevent valid recovery and return `ok=False` with the detected cycle path.
+- Simulations accrue damage at each time step based on active incidents' current severity and impact.
+- Graph-aware strategy dynamically isolates contained assets, reducing downstream lateral exposure for remaining uncontained alerts.
 
 ---
 
 ## 8. Open Questions & Risks
-- None. Iterative three-color DFS has $O(V + E)$ time complexity and avoids call-stack overflow.
+- None. Simulation operates purely in memory with deterministic outputs.
 
 ---
 
-## 9. Next Phase (Phase 5) Instructions
+## 9. Next Phase (Phase 6) Instructions
 ### Goals
-Implement discrete event strategy simulation in `backend/planner/core/simulate.py`.
+Implement all REST API endpoints in `backend/planner/api/app.py` conforming to [docs/API_CONTRACT.md](file:///c:/Users/tejas/Firebreak-Cordon/docs/API_CONTRACT.md).
 
 ### Specifications
-1. **Simulation Model**:
-   - Compare three distinct operational strategies:
-     1. `"fcfs"`: First-Come-First-Served (order of arrival timestamp).
-     2. `"severity_only"`: Highest severity first (descending raw severity).
-     3. `"graph_aware"`: Priority queue order using dynamic score $S = \text{sev} \times \text{conf} \times \text{impact}$.
-   - Deterministic execution: accept an explicit integer `seed` to seed `random.Random(seed)`.
-   - Discrete time ticks / handling rounds:
-     - While active incidents remain:
-       - Selected incident is contained/mitigated.
-       - Unhandled incidents accrue damage at each time step proportional to their current impact.
-       - Total damage accumulated is recorded.
-   - Return dictionary structure matching API contract:
-     ```python
-     {
-         "fcfs": {"total_damage": float, "handled_order": list[str]},
-         "severity_only": {"total_damage": float, "handled_order": list[str]},
-         "graph_aware": {"total_damage": float, "handled_order": list[str]}
-     }
-     ```
-2. **Tests to Add in `backend/tests/test_simulate.py`**:
-   - Determinism test: identical seeds produce identical total damage and handled order.
-   - Strategy differentiation test:
-     - On `worked_example.json`, assert that `graph_aware` handles `INC-1` first, `severity_only` handles `INC-2` first, and `fcfs` handles `INC-1` first.
-     - Graph-aware accumulates lower total lateral damage than severity-only due to containing high-impact asset `LT` earlier.
+1. **API Endpoints**:
+   - `GET /health`: Health status.
+   - `POST /network`: Load full network JSON into active state.
+   - CRUD for `/nodes`, `/edges`, `/incidents`, `/scenarios`.
+   - `GET /queue`: Returns prioritized incident queue with explainable score breakdowns.
+   - `GET /blast-radius/<node_id>`: Returns BFS hops and reach probabilities.
+   - `GET /attack-path?from=<source>&to=<target>`: Returns Dijkstra shortest path and probability.
+   - `POST /isolate/<node_id>`: Simulates node containment, returns before/after risk scores.
+   - `GET /restore-order`: Returns topological order or detected cycle.
+   - `POST /simulate`: Simulates response strategies with explicit seed.
+2. **Error Handling**:
+   - Consistent JSON format: `{"error": {"code": "...", "message": "...", "details": [...]}}` with 400 and 404 HTTP codes.
+3. **Tests to Add in `backend/tests/test_api.py`**:
+   - Comprehensive test client suite asserting endpoint status codes and response bodies against `worked_example` expectations.
 
 ---
 
 ## 10. Rules for Future Phases
 1. Update `HANDOFF.md` at the conclusion of every phase.
 2. Keep `backend/planner/core/` pure.
-3. Validate against `docs/expected_values.md`.
+3. Keep API responses aligned with `docs/API_CONTRACT.md`.
