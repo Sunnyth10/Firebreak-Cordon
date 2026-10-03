@@ -42,3 +42,8 @@ This document records architectural, algorithmic, and data modeling decisions ma
 ### ADR-007: Isolation Semantics
 - **Context**: When a node is contained/isolated, how is the graph altered?
 - **Decision**: Isolating node $x$ via `network.without_node(x)` returns a new immutable copy of `Network` with node $x$ removed along with all incident network edges. Incident scores and blast radiuses are then recalculated on this sub-network.
+
+### ADR-008: Reach Probability Logarithmic Transformation & Rounding
+- **Context**: Multiplying probabilities along paths can suffer from numeric instability and floating-point drift.
+- **Decision**: In `blast.blast_radius`, maximum reach probability along any directed network path is solved as a shortest path problem using non-negative additive weights $w = -\ln(p) \ge 0$ via Dijkstra's algorithm. The reach probability is recovered as $\exp(-\text{dist})$ and rounded to 4 decimal places.
+- **Consequence**: Guaranteed convergence without negative cycle hazards, exact equivalence with maximum product over paths, and numerical match with hand-calculated reference values.
