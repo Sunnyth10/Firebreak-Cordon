@@ -47,3 +47,22 @@ This document records architectural, algorithmic, and data modeling decisions ma
 - **Context**: Multiplying probabilities along paths can suffer from numeric instability and floating-point drift.
 - **Decision**: In `blast.blast_radius`, maximum reach probability along any directed network path is solved as a shortest path problem using non-negative additive weights $w = -\ln(p) \ge 0$ via Dijkstra's algorithm. The reach probability is recovered as $\exp(-\text{dist})$ and rounded to 4 decimal places.
 - **Consequence**: Guaranteed convergence without negative cycle hazards, exact equivalence with maximum product over paths, and numerical match with hand-calculated reference values.
+
+### ADR-009: Cloud Field Theme Integration
+- **Context**: Visual enhancement for hackathon presentation to provide an animated night-mountain background without compromising dashboard functionality, backend contracts, or algorithm tests.
+- **Decisions**:
+  - **D1 (Scope)**: Background only behind the existing 100vh dashboard shell.
+  - **D2 (Marketing content)**: Landing page sections (hero, marketing cards, reveal text) are out of scope.
+  - **D3 (Design system)**: Preserve existing dashboard color palette (cyan, rose, slate) and fonts (Outfit, JetBrains Mono).
+  - **D4 (Host dependencies)**: Do not add Tailwind, GSAP, or iconify to the host repository; the component runs in an isolated iframe.
+  - **D5 (Color grade)**: Default neutral grade: `mode="dark"`, `hue={0}`, `saturation={1}`, `brightness={1}`.
+  - **D6 (Interaction)**: Pointer events on the iframe are disabled (`pointer-events: none`) so dashboard clicks are never blocked; static centered parallax is accepted.
+- **Iframe & CDN Trade-off**: The `@designcodeio/threeui` package renders an internal sandboxed iframe referencing CDN assets. Animated shader requires internet at presentation time; offline fallback gracefully renders dark backdrop (`#071010`) without breaking dashboard logic.
+- **Stacking & Glass Panel Architecture**:
+  - `#root` is assigned `isolation: isolate` in `theme.css`.
+  - Backdrop is mounted at fixed `z-index: -1` inside a decorative `aria-hidden` container.
+  - Dashboard root `backgroundColor` is set to `transparent`.
+  - Header (`rgba(12, 18, 32, 0.72)`), sidebar (`rgba(10, 15, 29, 0.72)`), and Cytoscape canvas backing (`rgba(9, 13, 22, 0.62)`) with `backdrop-filter: blur(12px)` preserve text contrast (WCAG AA 4.5:1) while allowing the mountain horizon to show through.
+  - Code-split via `React.lazy` to keep the 500 kB shader asset out of the main bundle chunk.
+  - Accessibility: `prefers-reduced-motion: reduce` renders a static CSS gradient (`#050510` to `#14102a`) without mounting the iframe.
+

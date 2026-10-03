@@ -168,3 +168,35 @@ The prototype is fully functional and ready for live presentation:
 - **Core Pedagogical Narrative**: The UI interactively illustrates why a low-severity alert on a connected laptop (`LT`) out-ranks a high-severity alert on an isolated printer (`P`).
 - **Mathematical Transparency**: Every algorithmic choice (priority score breakdown, shortest path, containment risk delta, topological sequence, strategy damage curves) is visible, explainable, and demonstrable in real time.
 
+---
+
+## 8. UI Theme: Cloud Field Integration
+- **Branch**: `ui-changes`
+- **Objective**: Add the animated ThreeUI `CloudField` night-mountain background behind the dashboard without altering any algorithm, API, state, handler, or test behavior.
+- **Files Created**:
+  - `frontend/src/theme/CloudBackdrop.jsx`: Lazy-loaded wrapper rendering `<LazyCloudField mode="dark" ... />` inside an `aria-hidden` container at `z-index: -1`, with `pointer-events: none` and `prefers-reduced-motion` gradient fallback.
+  - `frontend/src/theme/theme.css`: Root isolation (`#root { isolation: isolate; }`), glass panel helpers, and body background reset.
+- **Files Modified**:
+  - `frontend/package.json` & `frontend/package-lock.json`: Added `@designcodeio/threeui@1.2.0` (pinned) and `three@^0.186.1`.
+  - `frontend/src/main.jsx`: Imported `theme.css` and mounted `<CloudBackdrop />` as a sibling of `<App />` within `<StrictMode>`.
+  - `frontend/src/App.jsx`: Applied 4 style-only modifications:
+    1. Root wrapper `backgroundColor`: `#090d16` -> `'transparent'`.
+    2. Header: `backgroundColor: 'rgba(12, 18, 32, 0.72)'`, `backdropFilter: 'blur(12px)'`.
+    3. Cytoscape canvas container backing: added `backgroundColor: 'rgba(9, 13, 22, 0.62)'`.
+    4. Right sidebar `<aside>`: `backgroundColor: 'rgba(10, 15, 29, 0.72)'`, `backdropFilter: 'blur(12px)'`.
+  - `docs/DECISIONS.md`: Appended ADR-009.
+  - `README.md`: Added UI Theme section and author credit.
+- **Verification Commands & Output**:
+  - `npm run lint`: 0 errors.
+  - `npm run build`: Success in 292ms. Generated isolated lazy chunk `CloudField-DGPG2bS5.js` (503.56 kB) while main chunk `index-DRRqjWA9.js` remained at 693.90 kB (minimal wrapper footprint).
+  - `pytest -q backend/tests`: 61 passed in 0.52s (all algorithms, models, and API integration tests intact).
+  - `smoke_live_servers.py`: 8/8 end-to-end smoke tests passed with 100% health against live servers.
+- **Known Limitations**:
+  - **Internet Dependency**: The component loads supporting assets from CDNs inside its sandboxed iframe. If offline at presentation, it cleanly renders a dark background without error.
+  - **Static Parallax**: Because pointer events are disabled (`pointer-events: none`) to guarantee interactive access to all Cytoscape and dashboard controls, shader mouse parallax is static/centered.
+- **Removal Instructions (Rollback)**:
+  1. Delete `frontend/src/theme/`.
+  2. Revert `main.jsx` and the 4 style edits in `App.jsx`.
+  3. Run `npm uninstall @designcodeio/threeui three` in `frontend/`.
+
+

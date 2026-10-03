@@ -1,0 +1,27 @@
+/* Theme integration for Cloud Field background */
+#root {
+  isolation: isolate;
+}
+
+body {
+  background: var(--bg-primary);
+  margin: 0;
+  overflow: hidden;
+}
+
+/* Glass styling utilities for theme */
+.glass-header {
+  background-color: rgba(12, 18, 32, 0.72);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.glass-aside {
+  background-color: rgba(10, 15, 29, 0.72);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.glass-graph-panel {
+  background-color: rgba(9, 13, 22, 0.62);
+}

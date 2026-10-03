@@ -101,3 +101,11 @@ Open `http://localhost:5173/` in your browser.
    - Review the topological recovery pipeline ensuring database `D` and login `L` are online before app `A`, and `A` before web `W`.
 5. **Simulation Comparison View (📊)**:
    - Observe how Graph-Aware containment neutralizes the laptop immediately, slashing accumulated damage compared to the Severity-Only approach.
+
+---
+
+## UI Theme & Credits
+The dashboard features an animated night-mountain backdrop with translucent glassmorphic panels preserving full WCAG AA contrast.
+- *Background effect: ThreeUI Cloud Field (MIT, © Meng To).*
+- Accessibility & Performance: Uses code-splitting via `React.lazy`, supports a static gradient fallback for `prefers-reduced-motion: reduce`, and an optional half-resolution `?lite=1` mode.
+

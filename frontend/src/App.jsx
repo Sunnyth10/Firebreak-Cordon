@@ -419,7 +419,7 @@ export default function App() {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', backgroundColor: '#090d16', color: '#f1f5f9' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', backgroundColor: 'transparent', color: '#f1f5f9' }}>
       {/* Top Header */}
       <header
         style={{
@@ -428,7 +428,9 @@ export default function App() {
           alignItems: 'center',
           padding: '12px 24px',
           borderBottom: '1px solid #1e293b',
-          backgroundColor: '#0c1220',
+          backgroundColor: 'rgba(12, 18, 32, 0.72)',
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
@@ -567,7 +569,7 @@ export default function App() {
           )}
 
           {/* Tab 1: Interactive Cytoscape Canvas */}
-          <div style={{ flex: 1, display: activeTab === 'graph' ? 'block' : 'none', position: 'relative' }}>
+          <div style={{ flex: 1, display: activeTab === 'graph' ? 'block' : 'none', position: 'relative', backgroundColor: 'rgba(9, 13, 22, 0.62)' }}>
             <div ref={containerRef} style={{ width: '100%', height: '100%' }} />
 
             {/* Bottom Legend */}
@@ -967,7 +969,9 @@ export default function App() {
           style={{
             width: '320px',
             borderLeft: '1px solid #1e293b',
-            backgroundColor: '#0a0f1d',
+            backgroundColor: 'rgba(10, 15, 29, 0.72)',
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
             padding: '20px',
             display: 'flex',
             flexDirection: 'column',
