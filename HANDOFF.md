@@ -138,6 +138,15 @@ All 61 tests passed:
   - 1,000-node iterative DFS topological sort: < 50ms.
 - 2,500-node chain test: 0 `RecursionError`.
 - NetworkX cross-verification: 100% agreement across all algorithms.
+- **Live HTTP Smoke Tests (`backend/tests/smoke_live_servers.py`)**:
+  - Vite Frontend (`http://127.0.0.1:5173/`): 200 OK, valid React 18 DOM.
+  - Flask API (`http://127.0.0.1:5000/health`): 200 OK (`{"status": "ok", "version": "0.1.0"}`).
+  - Queue (`/queue`): `INC-1` (score 49.92) ranks #1 ahead of `INC-2` (score 8.10).
+  - Blast Radius (`/blast-radius/LT`): 4 reachable nodes, Database `D` at 2 hops ($p = 0.56$).
+  - Attack Path (`/attack-path?from=LT&to=D`): `LT -> L -> D` ($p = 0.5600$).
+  - Restore Order (`/restore-order`): $D \to L \to A \to B \to LT \to P \to W$ ($D < A < W$, 0 cycles).
+  - Simulation (`/simulate`): Graph-Aware damage 80.64 vs Severity-Only 132.84 (~40% reduction).
+  - Live Isolation (`/isolate/L`): Disruption cost 9, $65.38\%$ incident risk reduction.
 
 ---
 
@@ -154,6 +163,8 @@ All 61 tests passed:
 ---
 
 ## 7. Demo Readiness
-The prototype is fully functional and ready for presentation:
-- The UI interactively illustrates why a low-severity alert on a connected laptop (`LT`) out-ranks a high-severity alert on an isolated printer (`P`).
-- Every algorithmic choice (priority score breakdown, shortest path, containment risk delta, topological sequence, strategy damage curves) is visible, explainable, and demonstrable.
+The prototype is fully functional and ready for live presentation:
+- **Live Servers**: Both Flask (`http://localhost:5000`) and Vite React frontend (`http://localhost:5173`) are actively running and serving live traffic.
+- **Core Pedagogical Narrative**: The UI interactively illustrates why a low-severity alert on a connected laptop (`LT`) out-ranks a high-severity alert on an isolated printer (`P`).
+- **Mathematical Transparency**: Every algorithmic choice (priority score breakdown, shortest path, containment risk delta, topological sequence, strategy damage curves) is visible, explainable, and demonstrable in real time.
+
